@@ -1,6 +1,6 @@
 package br.com.alura.compras.android.models
 
-import kotlinx.datetime.LocalDateTime
+import java.time.LocalDateTime
 import java.util.UUID
 
 data class Product(

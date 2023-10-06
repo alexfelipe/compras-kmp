@@ -7,6 +7,7 @@ import br.com.alura.compras.android.ui.uistate.ProductListUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
+import java.time.LocalDateTime
 
 class ShoppingListViewModel : ViewModel() {
 
@@ -36,8 +37,13 @@ class ShoppingListViewModel : ViewModel() {
         }
     }
 
-    fun add(product: Product) {
-
+    fun save(name: String) {
+        products.update {
+            it + Product(
+                name = name,
+                dateTime = LocalDateTime.now()
+            )
+        }
     }
 
 }
