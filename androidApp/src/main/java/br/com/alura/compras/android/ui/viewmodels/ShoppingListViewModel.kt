@@ -32,18 +32,32 @@ class ShoppingListViewModel : ViewModel() {
                             p
                         }
                     }
+                },
+                onProductTextChange = { name ->
+                    _uiState.value = _uiState.value.copy(productText = name)
                 }
             )
         }
     }
 
-    fun save(name: String) {
-        products.update {
-            it + Product(
-                name = name,
-                dateTime = LocalDateTime.now()
-            )
+    fun save() {
+        val name = _uiState.value.productText
+        if (products.value.find {
+                it.name.uppercase() == name.uppercase()
+            } == null) {
+            products.update {
+                listOf(
+                    Product(
+                        name = name,
+                        dateTime = LocalDateTime.now()
+                    )
+                ) + it
+            }
         }
+        _uiState.update {
+            it.copy(productText = "")
+        }
+
     }
 
 }

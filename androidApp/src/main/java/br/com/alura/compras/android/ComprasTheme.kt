@@ -14,6 +14,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.alura.compras.android.googlefonts.mansalvaFontFamily
+import br.com.alura.compras.android.googlefonts.montserratFontFamily
 
 @Composable
 fun MyApplicationTheme(
@@ -35,10 +37,10 @@ fun MyApplicationTheme(
     }
     val typography = Typography(
         bodyMedium = TextStyle(
-            fontFamily = FontFamily.Default,
+            fontFamily = montserratFontFamily,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp
-        )
+        ),
     )
     val shapes = Shapes(
         small = RoundedCornerShape(4.dp),
@@ -53,3 +55,12 @@ fun MyApplicationTheme(
         content = content
     )
 }
+
+val mainColor = Color(0xFF4574E3)
+val buttonColor = Color(0xFF3AE0AE)
+val textButtonColor = Color(0xFFFFFFFF)
+val textColor = Color(0xFF8A8A8A)
+val iconColor = Color(0xFF8A8A8A)
+val uncheckedColor = Color(0xFF8A8A8A)
+val checkmarkColor = Color(0xFF3AE0AE)
+val checkedColor = Color.Transparent
