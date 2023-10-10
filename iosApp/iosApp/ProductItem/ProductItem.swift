@@ -10,22 +10,22 @@ import SwiftUI
 
 struct ProductItem: View {
     
-    let product: Product
-    @State private var check: Bool = true
+    var product: Product
+    var onTap: () -> Void
 
     var body: some View {
         HStack() {
             VStack(alignment: .leading) {
                 HStack(spacing: 8) {
                     Button(action: {
-                        check = !check
+                        onTap()
                     }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 2)
                                 .stroke(Color.black, lineWidth: 2)
                                 .background(Color.clear)
                                 .frame(width: 20, height: 20)
-                            if check {
+                            if product.wasBought {
                                 Image(systemName: "checkmark")
                                     .foregroundColor(Color.green)
                             }
@@ -52,5 +52,7 @@ struct ProductItem: View {
 }
 
 #Preview {
-    ProductItem(product: Product(name: "teste"))
+    ProductItem(product: Product(name: "teste")) {
+        
+    }
 }

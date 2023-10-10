@@ -8,10 +8,24 @@
 
 import Foundation
 
-struct Product {
+class Product: Identifiable {
+    
+    let id = UUID()
     let name: String
-    let wasBought: Bool = false
-    let dateTime: Date = Date()
+    @Published var wasBought: Bool
+    let dateTime: Date
+    
+    init(name: String) {
+        self.name = name
+        self.wasBought = false
+        self.dateTime = Date()
+    }
+    
+    init(name: String, wasBought: Bool) {
+        self.name = name
+        self.wasBought = wasBought
+        self.dateTime = Date()
+    }
 
     func format() -> String {
         let formatter = DateFormatter()
@@ -21,24 +35,25 @@ struct Product {
 }
 
 let sampleProducts: [Product] = [
-    Product(name: "Arroz"),
-    Product(name: "Feijão"),
-    Product(name: "Açúcar"),
-    Product(name: "Café"),
-    Product(name: "Farinha de Trigo"),
-    Product(name: "Leite"),
-    Product(name: "Óleo de Soja"),
-    Product(name: "Carne"),
-    Product(name: "Peixe"),
-    Product(name: "Frutas"),
-    Product(name: "Legumes"),
-    Product(name: "Pão"),
-    Product(name: "Queijo"),
-    Product(name: "Macarrão"),
-    Product(name: "Sabão em Pó"),
-    Product(name: "Sabonete"),
-    Product(name: "Shampoo"),
-    Product(name: "Condicionador"),
-    Product(name: "Escova de Dentes"),
-    Product(name: "Papel Higiênico")
+    Product(name: "Arroz", wasBought: Bool.random()),
+    Product(name: "Feijão", wasBought: Bool.random()),
+    Product(name: "Açúcar", wasBought: Bool.random()),
+    Product(name: "Café", wasBought: Bool.random()),
+    Product(name: "Farinha de Trigo", wasBought: Bool.random()),
+    Product(name: "Leite", wasBought: Bool.random()),
+    Product(name: "Óleo de Soja", wasBought: Bool.random()),
+    Product(name: "Carne", wasBought: Bool.random()),
+    Product(name: "Peixe", wasBought: Bool.random()),
+    Product(name: "Frutas", wasBought: Bool.random()),
+    Product(name: "Legumes", wasBought: Bool.random()),
+    Product(name: "Pão", wasBought: Bool.random()),
+    Product(name: "Queijo", wasBought: Bool.random()),
+    Product(name: "Macarrão", wasBought: Bool.random()),
+    Product(name: "Sabão em Pó", wasBought: Bool.random()),
+    Product(name: "Sabonete", wasBought: Bool.random()),
+    Product(name: "Shampoo", wasBought: Bool.random()),
+    Product(name: "Condicionador", wasBought: Bool.random()),
+    Product(name: "Escova de Dentes", wasBought: Bool.random()),
+    Product(name: "Papel Higiênico", wasBought: Bool.random())
 ]
+

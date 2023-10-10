@@ -10,8 +10,7 @@ import SwiftUI
 
 struct ShoppingList: View {
     
-    @State private var productName: String = ""
-    let products: [Product]
+    @StateObject private var viewModel = ShoppingListViewModel()
     
     var body: some View {
         VStack {
@@ -19,7 +18,7 @@ struct ShoppingList: View {
                 Spacer()
                 TextField(
                     "Digite o item que deseja adicionar",
-                    text: $productName
+                    text: $viewModel.productText
                 ).padding(16)
                 Spacer()
             }
@@ -31,7 +30,7 @@ struct ShoppingList: View {
                     Text("Salvar item")
                         .foregroundColor(.white)
                 ).onTapGesture(perform: {
-                    
+                    viewModel.save()
                 })
             ScrollView {
                 LazyVStack {
@@ -44,9 +43,13 @@ struct ShoppingList: View {
                         }
                         DashedLineView()
                     }.padding(16)
-                    ForEach(products, id: \.name){ product in
-                        ProductItem(product: product)
+                    ForEach(viewModel.productsToBuy, id: \.name){ product in
+                        ProductItem(product: product, onTap: {
+                            viewModel.toggleProduct(product: product)
+                        })
                     }
+                }
+                LazyVStack {
                     VStack {
                         HStack{
                             Text("Comprados")
@@ -56,8 +59,10 @@ struct ShoppingList: View {
                         }
                         DashedLineView()
                     }.padding(16)
-                    ForEach(Array(sampleProducts[3...6]), id: \.name){ product in
-                        ProductItem(product: product)
+                    ForEach(Array(viewModel.boughtProducts), id: \.name){ product in
+                        ProductItem(product: product, onTap: {
+                            viewModel.toggleProduct(product: product)
+                        })
                     }
                 }
             }
@@ -66,7 +71,7 @@ struct ShoppingList: View {
 }
 
 #Preview {
-    ShoppingList(products: Array(sampleProducts[1...3]))
+    ShoppingList()
 }
 
 struct DashedLineView: View {
