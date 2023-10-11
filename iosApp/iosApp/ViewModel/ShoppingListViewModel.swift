@@ -10,7 +10,7 @@ import Foundation
 
 class ShoppingListViewModel: ObservableObject {
     
-    @Published private var products: [Product] = Array(sampleProducts.shuffled()[0...10])
+    @Published private var products: [Product] = []
     @Published var productText = ""
     
     var productsToBuy: [Product] {
@@ -22,12 +22,12 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     func toggleProduct(product: Product) {
-        products = products.map({ p in
-            if(p.id == product.id){
-                p.wasBought.toggle()
-            }
-            return p
-        })
+        let productIndex = products.firstIndex { p in
+                    p.id == product.id
+                }
+                guard let productIndex else { return }
+                products[productIndex].wasBought.toggle()
+        objectWillChange.send()
     }
     
     func save() {

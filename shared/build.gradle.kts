@@ -29,6 +29,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.uuid)
                 //put your multiplatform dependencies here
             }
         }

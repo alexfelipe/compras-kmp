@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ShoppingList: View {
     
-    @StateObject private var viewModel = ShoppingListViewModel()
+    @ObservedObject private var viewModel = ShoppingListViewModel()
     
     var body: some View {
         VStack {
@@ -33,37 +33,44 @@ struct ShoppingList: View {
                     viewModel.save()
                 })
             ScrollView {
-                LazyVStack {
-                    VStack {
-                        HStack{
-                            Text("Lista de compras")
-                                .foregroundColor(Color(hex: 0xf4574E3))
-                                .font(.system(size: 32))
-                            Spacer()
+                if(!viewModel.productsToBuy.isEmpty) {
+                    LazyVStack {
+                        
+                        VStack {
+                            HStack{
+                                Text("Lista de compras")
+                                    .foregroundColor(Color(hex: 0xf4574E3))
+                                    .font(.system(size: 32))
+                                Spacer()
+                            }
+                            DashedLineView()
+                        }.padding(16)
+                        ForEach(viewModel.productsToBuy, id: \.name){ product in
+                            ProductItem(product: product, onTap: {
+                                viewModel.toggleProduct(product: product)
+                            })
                         }
-                        DashedLineView()
-                    }.padding(16)
-                    ForEach(viewModel.productsToBuy, id: \.name){ product in
-                        ProductItem(product: product, onTap: {
-                            viewModel.toggleProduct(product: product)
-                        })
                     }
                 }
+                if (!viewModel.boughtProducts.isEmpty) {
                 LazyVStack {
-                    VStack {
-                        HStack{
-                            Text("Comprados")
-                                .foregroundColor(Color(hex: 0xf4574E3))
-                                .font(.system(size: 32))
-                            Spacer()
+                    
+                        VStack {
+                            HStack{
+                                Text("Comprados")
+                                    .foregroundColor(Color(hex: 0xf4574E3))
+                                    .font(.system(size: 32))
+                                Spacer()
+                            }
+                            DashedLineView()
+                        }.padding(16)
+                        ForEach(Array(viewModel.boughtProducts), id: \.name){ product in
+                            ProductItem(product: product, onTap: {
+                                viewModel.toggleProduct(product: product)
+                            })
                         }
-                        DashedLineView()
-                    }.padding(16)
-                    ForEach(Array(viewModel.boughtProducts), id: \.name){ product in
-                        ProductItem(product: product, onTap: {
-                            viewModel.toggleProduct(product: product)
-                        })
-                    }
+
+                }
                 }
             }
         }
