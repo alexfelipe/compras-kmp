@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -62,21 +63,32 @@ fun ShoppingListScreen(
     ) {
         AnimatedVisibility(visible = productInputVisible) {
             Column(Modifier.padding(16.dp)) {
-                OutlinedTextField(value = uiState.productText,
+                BasicTextField(
+                    value = uiState.productText,
                     onValueChange = uiState.onProductTextChange,
                     Modifier.fillMaxWidth(),
-                    placeholder = {
-                        Text(
-                            text = "Digite o item que deseja adicionar",
-                            style = TextStyle(
-                                fontFamily = montserratFontFamily,
-                                fontWeight = FontWeight(600),
-                                fontSize = 16.sp,
-                                color = textColor
+                    textStyle = TextStyle(
+                        fontFamily = montserratFontFamily,
+                        fontWeight = FontWeight(600),
+                        fontSize = 16.sp,
+                        color = textColor
+                    ),
+                    decorationBox = { innerTextField ->
+                        if (uiState.productText.isEmpty()) {
+                            Text(
+                                text = "Digite o item que deseja adicionar",
+                                style = TextStyle(
+                                    fontFamily = montserratFontFamily,
+                                    fontWeight = FontWeight(600),
+                                    fontSize = 16.sp,
+                                    color = textColor
+                                )
                             )
-                        )
-                    })
-                Spacer(modifier = Modifier.size(8.dp))
+                        }
+                        innerTextField()
+                    },
+                )
+                Spacer(modifier = Modifier.size(16.dp))
                 Box(Modifier.fillMaxWidth()) {
                     Box(
                         Modifier
