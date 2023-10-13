@@ -26,10 +26,7 @@ class MainActivity : ComponentActivity() {
                     val viewModel by viewModels<ShoppingListViewModel>()
                     val uiState by viewModel.uiState.collectAsState(ProductListUiState())
                     ShoppingListScreen(
-                        uiState = uiState,
-                        onSaveProduct = {
-                            viewModel.save()
-                        }
+                        uiState = uiState
                     )
                 }
             }

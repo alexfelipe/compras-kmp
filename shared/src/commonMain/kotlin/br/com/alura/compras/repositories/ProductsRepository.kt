@@ -1,5 +1,7 @@
 package br.com.alura.compras.repositories
 
+import br.com.alura.compras.logger.logMessage
+import br.com.alura.compras.logger.logWarn
 import com.benasher44.uuid.uuid4
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,6 +45,27 @@ class ProductsRepository {
                         name = name
                     )
                 ) + it
+            }
+        }
+    }
+
+    fun delete(id: String) {
+        val products = _products.value
+        val index = products.indexOfFirst {
+            it.id == id
+        }
+
+        if(index > -1) {
+            _products.value = products.filterNot { it.id == id }
+        }
+    }
+
+    fun edit(id: String, name: String) {
+        _products.value = _products.value.map { p ->
+            if(id == p.id) {
+                p.copy(name = name)
+            } else {
+                p
             }
         }
     }

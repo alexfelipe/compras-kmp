@@ -1,5 +1,6 @@
 package br.com.alura.compras.android.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.alura.compras.android.models.Product
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,11 +28,22 @@ class ShoppingListViewModel : ViewModel() {
     init {
         _uiState.update {
             it.copy(
-                onCheckedProductChange = { value, product ->
+                onCheckedProductChange = { product, value ->
                     repository.productWasBought(product.id, value)
                 },
                 onProductTextChange = { name ->
                     _uiState.value = _uiState.value.copy(productText = name)
+                },
+                onEditProduct = { product, name ->
+                    Log.i("ShoppingListViewModel", "onEditProduct: $product")
+                    edit(product.id, name)
+                },
+                onDeleteProduct = { product ->
+                    Log.i("ShoppingListViewModel", "onDeleteProduct: $product")
+                    delete(product.id)
+                },
+                onSaveProduct = {
+                    save()
                 }
             )
         }
@@ -45,9 +58,14 @@ class ShoppingListViewModel : ViewModel() {
                 }
             combine(
                 productsToBuyFlow,
-                boughtProductsFlow,
-                ::ProductListUiState
-            ).collectLatest { newState ->
+                boughtProductsFlow
+            ) { productsToBuy,
+                boughtProducts ->
+                _uiState.value.copy(
+                    productsToBuy = productsToBuy,
+                    boughtProducts = boughtProducts,
+                )
+            }.collectLatest { newState ->
                 _uiState.update {
                     it.copy(
                         boughtProducts = newState.boughtProducts,
@@ -58,12 +76,20 @@ class ShoppingListViewModel : ViewModel() {
         }
     }
 
-    fun save() {
+    private fun save() {
         val name = _uiState.value.productText
         _uiState.update {
             it.copy(productText = "")
         }
         repository.save(name)
+    }
+
+    private fun edit(id: String, name: String) {
+        repository.edit(id, name)
+    }
+
+    private fun delete(id: String) {
+        repository.delete(id)
     }
 
 }
