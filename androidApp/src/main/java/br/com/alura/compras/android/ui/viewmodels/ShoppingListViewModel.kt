@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,8 +27,8 @@ class ShoppingListViewModel : ViewModel() {
     init {
         _uiState.update {
             it.copy(
-                onCheckedProductChange = { product, value ->
-                    repository.productWasBought(product.id, value)
+                onCheckedProductChange = { product ->
+                    repository.toggleWasBought(product.id)
                 },
                 onProductTextChange = { name ->
                     _uiState.value = _uiState.value.copy(productText = name)

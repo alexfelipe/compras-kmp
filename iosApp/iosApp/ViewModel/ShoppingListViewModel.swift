@@ -15,36 +15,72 @@ import KMPNativeCoroutinesCore
 class ShoppingListViewModel: ObservableObject {
     
     private let repository = ProductsRepository()
-    @Published private var products: [Product] = []
+    @Published private var _productsToBuy: [Product] = []
+    @Published private var _boughtProducts: [Product] = []
     @Published var productText = ""
     
     init() {
-        
+        Task {
+            do {
+                let sequence = asyncSequence(for: repository.boughtProducts)
+                    .map { entities in
+                        entities.map { entity in
+                            Product(
+                                id: entity.id,
+                                name: entity.name,
+                                wasBought: entity.wasBought
+                            )
+                        }
+                    }
+                for try await newProducts in sequence {
+                    print("bought: \(newProducts)")
+                    _boughtProducts = newProducts
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+
+        Task {
+            do {
+                let sequence = asyncSequence(for: repository.productsToBuy)
+                    .map { entities in
+                        entities.map { entity in
+                            Product(
+                                id: entity.id,
+                                name: entity.name,
+                                wasBought: entity.wasBought
+                            )
+                        }
+                    }
+                for try await newProducts in sequence {
+                    print("toBuy: \(newProducts)")
+                    _productsToBuy = newProducts
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
     }
     
     var productsToBuy: [Product] {
-        return products.filter { !$0.wasBought }
+        _productsToBuy
     }
     
     var boughtProducts: [Product] {
-        return products.filter { $0.wasBought }
+        _boughtProducts
     }
     
     func toggleProduct(product: Product) {
-        
-        let productIndex = products.firstIndex { p in
-                    p.id == product.id
-                }
-                guard let productIndex else { return }
-                products[productIndex].wasBought.toggle()
-        objectWillChange.send()
+        repository.toggleWasBought(id: product.id.uuidString)
     }
     
     func save() {
-//        if products.first(where: { $0.name.uppercased() == productText.uppercased() }) == nil {
-//            products.insert(Product(name: productText, wasBought: false), at: 0)
-//        }
         repository.save(name: productText)
         productText = ""
+    }
+    
+    func delete(product: Product) {
+        repository.delete(id: product.id.uuidString)
     }
 }

@@ -48,13 +48,14 @@ struct ShoppingList: View {
                         ForEach(viewModel.productsToBuy, id: \.name){ product in
                             ProductItem(product: product, onTap: {
                                 viewModel.toggleProduct(product: product)
+                            }, onDeleteProduct: { product in
+                                viewModel.delete(product: product)
                             })
                         }
                     }
                 }
                 if (!viewModel.boughtProducts.isEmpty) {
                 LazyVStack {
-                    
                         VStack {
                             HStack{
                                 Text("Comprados")
@@ -67,9 +68,10 @@ struct ShoppingList: View {
                         ForEach(Array(viewModel.boughtProducts), id: \.name){ product in
                             ProductItem(product: product, onTap: {
                                 viewModel.toggleProduct(product: product)
+                            }, onDeleteProduct: { product in
+                                viewModel.delete(product: product)
                             })
                         }
-
                 }
                 }
             }

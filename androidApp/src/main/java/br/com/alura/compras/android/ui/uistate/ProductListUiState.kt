@@ -5,7 +5,7 @@ import br.com.alura.compras.android.models.Product
 data class ProductListUiState(
     val productsToBuy: List<Product> = emptyList(),
     val boughtProducts: List<Product> = emptyList(),
-    val onCheckedProductChange: (Product, Boolean) -> Unit = { _, _ -> },
+    val onCheckedProductChange: (Product) -> Unit = { },
     val productText: String = "",
     val onProductTextChange: (String) -> Unit = {},
     val onEditProduct: (Product, String) -> Unit = { _, _ -> },

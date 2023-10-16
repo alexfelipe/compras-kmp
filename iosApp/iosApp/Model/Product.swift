@@ -8,20 +8,36 @@
 
 import Foundation
 
-class Product: Identifiable {
+class Product: Identifiable, CustomStringConvertible, ObservableObject {
     
-    let id = UUID()
-    let name: String
+    let id: UUID
+    @Published var name: String
     @Published var wasBought: Bool
     let dateTime: Date
     
     init(name: String) {
+        self.id = UUID()
         self.name = name
         self.wasBought = false
         self.dateTime = Date()
     }
     
+    init(id: String, name: String) {
+        self.id = UUID(uuidString: id) ?? UUID()
+        self.name = name
+        self.wasBought = false
+        self.dateTime = Date()
+    }
+    
+    init(id: String, name: String, wasBought: Bool) {
+        self.id = UUID(uuidString: id) ?? UUID()
+        self.name = name
+        self.wasBought = wasBought
+        self.dateTime = Date()
+    }
+    
     init(name: String, wasBought: Bool) {
+        self.id = UUID()
         self.name = name
         self.wasBought = wasBought
         self.dateTime = Date()
@@ -32,6 +48,10 @@ class Product: Identifiable {
         formatter.dateFormat = "MMM dd, yyyy"
         return formatter.string(from: dateTime)
     }
+    
+    var description: String {
+            return "Product(id: \(id), name: \(name)"
+        }
 }
 
 let sampleProducts: [Product] = [

@@ -1,9 +1,7 @@
 package br.com.alura.compras.repositories
 
 import com.benasher44.uuid.uuid4
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutineScope
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -15,30 +13,31 @@ import kotlinx.datetime.Clock
 class ProductsRepository {
 
     private val products = _products.asStateFlow()
-    @NativeCoroutines
-    val boughtProducts get() =  products.flatMapLatest { entities ->
-        flow {
-            emit(entities.filter { it.wasBought })
-        }
-    }
-    @NativeCoroutines
-    val productsToBuy get() = products.flatMapLatest { entities ->
-        flow {
-            emit(entities.filter { !it.wasBought })
-        }
-    }
 
     @NativeCoroutines
-    val alex = flow<String> {
-        emit("alex")
-    }
+    val boughtProducts
+        get() = products.flatMapLatest { entities ->
+            flow {
+                emit(entities.filter { it.wasBought })
+            }
+        }
 
-    fun productWasBought(id: String, value: Boolean) {
-        _products.value = _products.value.map { p ->
-            if (id == p.id) {
-                p.copy(wasBought = value)
-            } else {
-                p
+    @NativeCoroutines
+    val productsToBuy
+        get() = products.flatMapLatest { entities ->
+            flow {
+                emit(entities.filter { !it.wasBought })
+            }
+        }
+
+    fun toggleWasBought(id: String) {
+        _products.update {
+            _products.value.map { p ->
+                if (id.uppercase() == p.id.uppercase()) {
+                    p.copy(wasBought = !p.wasBought)
+                } else {
+                    p
+                }
             }
         }
     }
@@ -61,17 +60,18 @@ class ProductsRepository {
     fun delete(id: String) {
         val products = _products.value
         val index = products.indexOfFirst {
-            it.id == id
+            it.id.uppercase() == id.uppercase()
         }
-
-        if(index > -1) {
-            _products.value = products.filterNot { it.id == id }
+        if (index > -1) {
+            _products.value = products.filterNot {
+                it.id.uppercase() == id.uppercase()
+            }
         }
     }
 
     fun edit(id: String, name: String) {
         _products.value = _products.value.map { p ->
-            if(id == p.id) {
+            if (id.uppercase() == p.id.uppercase()) {
                 p.copy(name = name)
             } else {
                 p
@@ -80,7 +80,8 @@ class ProductsRepository {
     }
 
     companion object {
-        private val _products: MutableStateFlow<List<ProductEntity>> = MutableStateFlow(emptyList())
+        private val _products =
+            MutableStateFlow<List<ProductEntity>>(emptyList())
     }
 
 }

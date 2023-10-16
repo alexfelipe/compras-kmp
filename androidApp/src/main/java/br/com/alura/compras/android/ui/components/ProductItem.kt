@@ -51,7 +51,7 @@ import br.com.alura.compras.android.uncheckedColor
 @Composable
 fun ProductItem(
     product: Product,
-    onCheckedProductChange: (Product, Boolean) -> Unit,
+    onCheckedProductChange: (Product) -> Unit,
     onDeleteProduct: (Product) -> Unit,
     onEditProduct: (Product, String) -> Unit,
     modifier: Modifier = Modifier,
@@ -86,8 +86,7 @@ fun ProductItem(
                             .background(Color.Transparent)
                             .clickable {
                                 onCheckedProductChange(
-                                    product,
-                                    !product.wasBought,
+                                    product
                                 )
                             }
                     ) {
@@ -188,7 +187,7 @@ fun ProductItemPreview() {
     MyApplicationTheme {
         ProductItem(
             product = sampleProducts.random(),
-            onCheckedProductChange = { _, _ -> },
+            onCheckedProductChange = { },
             onDeleteProduct = {},
             onEditProduct = { _, _ -> }
         )
@@ -201,7 +200,7 @@ fun ProductItemWithEdittingModeActivedPreview() {
     MyApplicationTheme {
         ProductItem(
             product = sampleProducts.random(),
-            onCheckedProductChange = { _, _ -> },
+            onCheckedProductChange = { },
             onDeleteProduct = {},
             onEditProduct = { _, _ -> },
             isEdittingMode = true

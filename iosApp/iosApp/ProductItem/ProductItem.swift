@@ -10,8 +10,10 @@ import SwiftUI
 
 struct ProductItem: View {
     
-    var product: Product
+    @ObservedObject var product: Product
     var onTap: () -> Void
+    var onDeleteProduct: (Product) -> Void
+    @State var editMode: Bool
 
     var body: some View {
         HStack() {
@@ -31,8 +33,13 @@ struct ProductItem: View {
                             }
                         }
                     }
-                    Text(product.name)
-                        .font(.system(size: 18, weight: .semibold))
+                    if(editMode) {
+                        TextField("Insira o nome do produto"
+                                  ,text: $product.name)
+                    } else {
+                        Text(product.name)
+                            .font(.system(size: 18, weight: .semibold))
+                    }
                 }
                 Text(product.format())
                     .foregroundColor(product.wasBought ? .gray : .black)
@@ -41,10 +48,24 @@ struct ProductItem: View {
             }
             Spacer()
             HStack {
-                Image(systemName: "trash")
-                    .foregroundColor(.red)
-                Image(systemName: "pencil")
-                    .foregroundColor(.blue)
+                if(editMode) {
+                    Image(systemName: "checkmark")
+                        .foregroundColor(.gray)
+                        .onTapGesture {
+                            editMode = false
+                        }
+                } else {
+                    Image(systemName: "trash")
+                        .foregroundColor(.gray)
+                        .onTapGesture {
+                            onDeleteProduct(product)
+                        }
+                    Image(systemName: "pencil")
+                        .foregroundColor(.gray)
+                        .onTapGesture {
+                            editMode = true
+                        }
+                }
             }
         }
         .padding()
@@ -52,7 +73,7 @@ struct ProductItem: View {
 }
 
 #Preview {
-    ProductItem(product: Product(name: "teste")) {
-        
-    }
+    ProductItem(product: Product(name: "teste"), 
+                onTap: {},
+                onDeleteProduct: { Product in })
 }
