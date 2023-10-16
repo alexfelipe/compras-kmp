@@ -7,11 +7,20 @@
 //
 
 import Foundation
+import shared
+import KMPNativeCoroutinesAsync
+import KMPNativeCoroutinesCore
 
+@MainActor
 class ShoppingListViewModel: ObservableObject {
     
+    private let repository = ProductsRepository()
     @Published private var products: [Product] = []
     @Published var productText = ""
+    
+    init() {
+        
+    }
     
     var productsToBuy: [Product] {
         return products.filter { !$0.wasBought }
@@ -22,6 +31,7 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     func toggleProduct(product: Product) {
+        
         let productIndex = products.firstIndex { p in
                     p.id == product.id
                 }
@@ -31,9 +41,10 @@ class ShoppingListViewModel: ObservableObject {
     }
     
     func save() {
-        if products.first(where: { $0.name.uppercased() == productText.uppercased() }) == nil {
-            products.insert(Product(name: productText, wasBought: false), at: 0)
-        }
+//        if products.first(where: { $0.name.uppercased() == productText.uppercased() }) == nil {
+//            products.insert(Product(name: productText, wasBought: false), at: 0)
+//        }
+        repository.save(name: productText)
         productText = ""
     }
 }
